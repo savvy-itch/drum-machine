@@ -60,13 +60,13 @@ body {
 }
 
 /* =========== DISPLAY =========== */
-.display {
+.settings {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
 }
-.lcd-screen {
+.display {
   background-color: var(--display-color);
   padding: .5rem .8rem;
 }
