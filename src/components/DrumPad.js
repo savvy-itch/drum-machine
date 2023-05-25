@@ -1,16 +1,18 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { DrumMachineContext } from '../context';
+import { ACTIONS, DrumMachineContext } from '../context';
+import { AUDIO_CLIPS } from '../App';
 
 export default function DrumPad({ drumpad, keyboardKey }) {
   const [pressedPad, setPressedPad] = useState(false);
   const audioRef = useRef();
 
-  const [state] = useContext(DrumMachineContext);
-  const {mute, volume} = state;
+  const [state, dispatch] = useContext(DrumMachineContext);
+  const {mute, bankIndex, volume} = state;
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.type === 'click' || event.key.toUpperCase() === keyboardKey) {
+        dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} })
         setPressedPad(true)
         if (audioRef.current) {
           audioRef.current.volume = volume;
@@ -38,6 +40,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
 
   function handleClick() {
     if (audioRef.current) {
+      dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} })
       audioRef.current.volume = volume;
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(error => {
@@ -48,6 +51,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
 
   return (
     <div className={`drum-pad ${pressedPad ? 'active' : ''}`} 
+      id={drumpad.id}
       tabIndex={0}
       onClick={handleClick}
     >
