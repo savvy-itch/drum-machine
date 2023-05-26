@@ -40,7 +40,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
 
   function handleClick() {
     if (audioRef.current) {
-      dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} })
+      dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} });
       audioRef.current.volume = volume;
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(error => {

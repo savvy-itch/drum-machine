@@ -3,8 +3,10 @@ import './App.css';
 import DrumPad from './components/DrumPad';
 import Switch from './components/Switch';
 import { DrumMachineContext, ACTIONS } from './context';
+import PatternField from './components/PatternField';
 
 // add ability to play with wrong language layout
+// assign to each pad unique color
 
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
@@ -31,6 +33,7 @@ export const AUDIO_CLIPS = [
   ]},
 ];
 const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
+// const KEYBOARD_KEYSs = [['Q', 'Й'], ['W', 'Ц'], ['E', 'У'], ['A', 'Ф'], ['S', 'Ы'], ['D', 'В'], ['Z', 'Я'], ['X', 'Ч'], ['C', 'С']];
 
 function App() {
   const [volume, setVolume] = useState(5);
@@ -71,6 +74,7 @@ function App() {
             <input type="range" onInput={handleVolumeChange} min="0" max="10" value={volume} step="1" />
           </div>
         </div>
+        <PatternField />
       </div>
     </div>
   );

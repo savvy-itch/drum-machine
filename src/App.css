@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 body {
@@ -18,7 +19,7 @@ body {
   /* #38686f */
 
   background-color: var(--drum-machine-body-color);
-  min-width: 500px;
+  min-width: 550px;
   width: 50vmin;
   padding: 1.5rem;
 }
@@ -65,10 +66,16 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  width: 35%;
+  max-width: 35%;
 }
 .display {
   background-color: var(--display-color);
   padding: .5rem .8rem;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* The switch - the box around the slider */
@@ -124,4 +131,36 @@ input:checked + .slider:before {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+/* ========== Pattern Field ======== */
+.pattern-field {
+  margin: 2rem 0;
+}
+.pattern-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.pattern-pad {
+  width: 30px;
+  height: 30px;
+  background-color: var(--pads-color);
+  border-radius: 5px;
+  border: 2px solid var(--display-color);
+  transition: .1s;
+}
+.pattern-pad:hover {
+  cursor: pointer;
+  border: 2px solid #2196F3;
+  background-color: var(--buttons-color);
+}
+.playing-pad {
+  border: 2px solid orange;
+}
+.assigned-pad {
+  background-color: lightsalmon;
+}
+.assigned-pad:hover {
+  background-color: hsl(17, 100%, 64%);
 }
