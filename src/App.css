@@ -141,6 +141,27 @@ input:checked + .slider:before {
   display: flex;
   width: 100%;
   justify-content: space-between;
+  margin-bottom: .5rem;
+}
+.pattern-btn {
+  width: 40px;
+  height: 30px;
+  background-color: var(--pads-color);
+  color: #172b4d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 2px solid #172b4d;
+  transition: .1s;
+}
+.pattern-btn svg {
+  height: 1.5em;
+  width: 1.5em;
+}
+.pattern-btn:hover,
+.pattern-btn:focus {
+  cursor: pointer;
 }
 .pattern-pad {
   width: 30px;

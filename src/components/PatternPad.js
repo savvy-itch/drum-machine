@@ -2,18 +2,18 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { DrumMachineContext } from '../context';
 import { AUDIO_CLIPS } from '../App';
 
-export default function PatternPad({ highlighted, isLoopPlaying }) {
+export default function PatternPad({ highlighted, isPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
-  const [state, dispatch] = useContext(DrumMachineContext);
+  const [state] = useContext(DrumMachineContext);
   const patternPadRef = useRef();
 
   // assign a sound clip to a pad that was last clicked (seen on display)
   function handleClick() {
     // if the pad was already assigned to the same sample
-    if (isAssigned === patternPadRef && state.currentName === patternPadRef.current.dataset.name) {
+    if (isAssigned && state.currentName === patternPadRef.current.dataset.name) {
       // unassign the pad
       setIsAssigned(false);
-      patternPadRef.current.src = null;
+      patternPadRef.current.src = '';
       patternPadRef.current.dataset.name = '';
     } else {
       // check if currentName is not a bank name
@@ -24,6 +24,12 @@ export default function PatternPad({ highlighted, isLoopPlaying }) {
       }
     }
   }
+
+  useEffect(() => {
+    if (!patternPadRef.current.src) {
+      setIsAssigned(false);
+    }
+  }, [patternPadRef.current?.src]);
 
   return (
     <button className={`pattern-pad ${highlighted ? 'playing-pad' : '' } ${isAssigned ? 'assigned-pad' : ''}`} onClick={handleClick}>
