@@ -7,6 +7,8 @@ import PatternField from './components/PatternField';
 
 // add ability to play with wrong language layout
 // assign to each pad unique color
+// optimize bank switch to not cause patter field re-render
+// on Power: off position also clear pattern and stop the loop
 
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
