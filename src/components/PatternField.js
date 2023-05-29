@@ -1,31 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PatternPad from './PatternPad';
-import { ACTIONS, DrumMachineContext } from '../context';
 import { BsFillPlayFill, BsFillStopFill } from "react-icons/bs";
-
-// add second row
+import * as Tone from 'tone';
 
 const padsAmount = 8;
 
 export default function PatternField() {
   const [isLoopPlaying, setIsLoopPlaying] = useState(false);
+  const [isPatternCleared, setIsPatternCleared] = useState(false);
   const [highlightedPadIndex, setHighlightedPadIndex] = useState(-1);
-
-  // removing state from context
-  const [playingPadIndex, setPlayingPadIndex] = useState(-1);
-
-  const [state, dispatch] = useContext(DrumMachineContext);
-
   const [audioElementsRow1, setAudioElementsRow1] = useState([]);
   const [audioElementsRow2, setAudioElementsRow2] = useState([]);
+
   useEffect(() => {
     const elementsRow1 = Array.from(document.getElementById('row-1').querySelectorAll('audio'));
     const elementsRow2 = Array.from(document.getElementById('row-2').querySelectorAll('audio'));
     setAudioElementsRow1(elementsRow1);
     setAudioElementsRow2(elementsRow2);
   }, [setAudioElementsRow1, setAudioElementsRow2]);
+
   useEffect(() => {
-    // Create a MutationObserver to listen for changes in the audio elements
+    // Listen for changes in the audio elements
     const observerRow1 = new MutationObserver(() => {
       const updatedElements = Array.from(document.getElementById('row-1').querySelectorAll('audio'));
       setAudioElementsRow1(updatedElements);
@@ -48,58 +43,56 @@ export default function PatternField() {
   }, [setAudioElementsRow1, setAudioElementsRow2]);
 
   const audioElements = [audioElementsRow1, audioElementsRow2];
-
-
   let padsArr = [];
   let padsArr2 = [];
 
   for (let i = 0; i < padsAmount; i++) {
-    padsArr.push(<PatternPad key={i} highlighted={i === highlightedPadIndex} />);
-    padsArr2.push(<PatternPad key={i} highlighted={i === highlightedPadIndex} />);
+    padsArr.push(<PatternPad key={i} highlighted={i === highlightedPadIndex} isPatternCleared={isPatternCleared} setIsPatternCleared={setIsPatternCleared} />);
+    padsArr2.push(<PatternPad key={i} highlighted={i === highlightedPadIndex} isPatternCleared={isPatternCleared} setIsPatternCleared={setIsPatternCleared} />);
   }
 
   useEffect(() => {
-    let intervalId = null;
-
     if (isLoopPlaying) {
       let index = 0;
-      intervalId = setInterval(() => {
-        // dispatch({ type: ACTIONS.UPDATE_PLAYING_PAD, payload: { playingPadIndex: index }});
-        // setPlayingPadIndex(index)
-        setHighlightedPadIndex(index);
+      setHighlightedPadIndex(index);
+      const row1 = audioElements[0];
+      const row2 = audioElements[1];
 
-        const row1 = audioElements[0];
-        const row2 = audioElements[1];
-
+      const playStep = () => {
         if (row1.length > 0 && row1[index] && row1[index].src !== '') {
-          row1[index].play().catch(error => { console.log(error) });
+          const sample1 = new Tone.Player("/audio/Brk_Snr.mp3").toDestination();
+          Tone.loaded().then(() => sample1.start())
         }
-
         if (row2.length > 0 && row2[index] && row2[index].src !== '') {
-          row2[index].play().catch(error => { console.log(error) });
+          const sample2 = new Tone.Player(row2[index].src).toDestination();
+          Tone.loaded().then(() => sample2.start())
         }
+        // set index to 0 when it reaches the end of the array
         index = (index + 1) % padsAmount;
-      }, 300);
+      }
+      const loop = new Tone.Loop(playStep, '8n');
+      loop.start(0);
+      Tone.Transport.start();
+      Tone.start();
     } else {
       // When the loop is not playing, don't highlight any pads
       setHighlightedPadIndex(-1);
+      Tone.Transport.stop();
     }
     // Clear the interval when the loop isn't playing
-    return () => {
-      clearInterval(intervalId);
-      // dispatch({ type: ACTIONS.UPDATE_PLAYING_PAD, payload: { playingPadIndex: -1 }});
-      // setPlayingPadIndex(-1)
-    };
+    // return () => {
+      
+    // };
   }, [isLoopPlaying]);
 
   function clearPattern() {
     // stop playing loop
     setIsLoopPlaying(false);
-    // dispatch({ type: ACTIONS.UPDATE_PLAYING_PAD, payload: { playingPadIndex: -1 }});
-    // setPlayingPadIndex(-1);
-
+    // clear pattern
+    setIsPatternCleared(true)
     const row1 = audioElements[0];
     const row2 = audioElements[1];
+    
     row1.forEach(audio => {
       audio.removeAttribute("src");
       audio.removeAttribute("data-name");
@@ -124,6 +117,7 @@ export default function PatternField() {
         </button>
         {padsArr2}
       </div>
+      <audio src="../audio/Brk_Snr.mp3"></audio>
     </div>
   )
 }

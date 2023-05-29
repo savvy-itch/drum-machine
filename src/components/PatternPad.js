@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState, useCallback, useMemo } 
 import { DrumMachineContext } from '../context';
 import { AUDIO_CLIPS } from '../App';
 
-export default function PatternPad({ highlighted }) {
+export default function PatternPad({ highlighted, isPatternCleared, setIsPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
   const [state] = useContext(DrumMachineContext);
   const patternPadRef = useRef();
@@ -11,13 +11,14 @@ export default function PatternPad({ highlighted }) {
   const handleClick = useCallback(() => {
     // if the pad was already assigned to the same sample
     if (isAssigned && state.currentName === patternPadRef.current.dataset.name) {
-      // unassign the pad
+      // unassign the sound from the pad
       setIsAssigned(false);
       patternPadRef.current.src = '';
       patternPadRef.current.dataset.name = '';
     } else {
       // if currentName is not a bank name
       if (!AUDIO_CLIPS.find(bank => bank.bank === state.currentName)) {
+        // assign corresponding sound to pad
         setIsAssigned(true);
         patternPadRef.current.src = AUDIO_CLIPS[state.bankIndex].clips.find(clip => clip.name === state.currentName).src;
         patternPadRef.current.dataset.name = state.currentName;
@@ -28,14 +29,16 @@ export default function PatternPad({ highlighted }) {
   const memoizedHandleClick = useMemo(() => handleClick, [handleClick]);
 
   useEffect(() => {
-    console.log('useEffect')
-    if (!patternPadRef.current.src) {
+    // if 'clear' button was clicked
+    if (isPatternCleared) {
+      // remove assigned pad highlight
       setIsAssigned(false);
+      setIsPatternCleared(false);
     }
-  }, [patternPadRef.current?.src]);
+  }, [isPatternCleared]);
 
   return (
-    <button className={`pattern-pad ${highlighted ? 'playing-pad' : '' } ${patternPadRef.current?.src ? 'assigned-pad' : ''}`} onClick={memoizedHandleClick}>
+    <button className={`pattern-pad ${highlighted ? 'playing-pad' : '' } ${isAssigned ? 'assigned-pad' : ''}`} onClick={memoizedHandleClick}>
       <audio ref={patternPadRef}></audio>
     </button>
   )
