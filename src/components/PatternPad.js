@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useRef, useState, useCallback, useMemo } 
 import { DrumMachineContext } from '../context';
 import { AUDIO_CLIPS } from '../App';
 
-// when unassigning pad, set src to a silent file to prevent error
-
 export default function PatternPad({ highlighted, isPatternCleared, setIsPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
   const [state] = useContext(DrumMachineContext);
@@ -15,7 +13,7 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
     if (isAssigned && state.currentName === patternPadRef.current.dataset.name) {
       // unassign the sound from the pad
       setIsAssigned(false);
-      patternPadRef.current.src = '';
+      patternPadRef.current.src = '/audio/silence.mp3';
       patternPadRef.current.dataset.name = '';
     } else {
       // if currentName is not a bank name
