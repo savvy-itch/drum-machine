@@ -11,6 +11,7 @@ export default function PatternField() {
   const [highlightedPadIndex, setHighlightedPadIndex] = useState(-1);
   const [audioElementsRow1, setAudioElementsRow1] = useState([]);
   const [audioElementsRow2, setAudioElementsRow2] = useState([]);
+  const [loop, setLoop] = useState(null);
 
   useEffect(() => {
     const elementsRow1 = Array.from(document.getElementById('row-1').querySelectorAll('audio'));
@@ -52,16 +53,17 @@ export default function PatternField() {
   }
 
   useEffect(() => {
+    let index = 0;
+    const row1 = audioElements[0];
+    const row2 = audioElements[1];
     if (isLoopPlaying) {
-      let index = 0;
-      setHighlightedPadIndex(index);
-      const row1 = audioElements[0];
-      const row2 = audioElements[1];
 
       const playStep = () => {
+        setHighlightedPadIndex(index);
         if (row1.length > 0 && row1[index] && row1[index].src !== '') {
-          const sample1 = new Tone.Player("/audio/Brk_Snr.mp3").toDestination();
-          Tone.loaded().then(() => sample1.start())
+          const sample1 = new Tone.Player(row1[index].src).toDestination();
+          
+          Tone.loaded().then(() => sample1.start());
         }
         if (row2.length > 0 && row2[index] && row2[index].src !== '') {
           const sample2 = new Tone.Player(row2[index].src).toDestination();
@@ -70,19 +72,20 @@ export default function PatternField() {
         // set index to 0 when it reaches the end of the array
         index = (index + 1) % padsAmount;
       }
-      const loop = new Tone.Loop(playStep, '8n');
-      loop.start(0);
+      const loop = new Tone.Loop(playStep, '4n');
       Tone.Transport.start();
-      Tone.start();
+      loop.start(0);
+      Tone.start()
+      setLoop(loop);
     } else {
-      // When the loop is not playing, don't highlight any pads
-      setHighlightedPadIndex(-1);
-      Tone.Transport.stop();
+      if (loop) {
+        // Stop the loop and don't highlight any pads
+        Tone.Transport.stop();
+        loop.stop(0);
+        setLoop(null);
+        setHighlightedPadIndex(-1);
+      }
     }
-    // Clear the interval when the loop isn't playing
-    // return () => {
-      
-    // };
   }, [isLoopPlaying]);
 
   function clearPattern() {
@@ -117,7 +120,6 @@ export default function PatternField() {
         </button>
         {padsArr2}
       </div>
-      <audio src="../audio/Brk_Snr.mp3"></audio>
     </div>
   )
 }

@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState, useCallback, useMemo } 
 import { DrumMachineContext } from '../context';
 import { AUDIO_CLIPS } from '../App';
 
+// when unassigning pad, set src to a silent file to prevent error
+
 export default function PatternPad({ highlighted, isPatternCleared, setIsPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
   const [state] = useContext(DrumMachineContext);
