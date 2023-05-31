@@ -5,9 +5,9 @@ import { AUDIO_CLIPS } from '../App';
 export default function DrumPad({ drumpad, keyboardKey }) {
   const [pressedPad, setPressedPad] = useState(false);
   const audioRef = useRef();
-
   const [state, dispatch] = useContext(DrumMachineContext);
-  const {mute, bankIndex, volume} = state;
+  const {powerOff, bankIndex, volume} = state;
+  const style = {boxShadow: `0px 0px 4px 2px ${AUDIO_CLIPS[bankIndex].clips.find(pad => pad.id === drumpad.id).color}`}
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -50,7 +50,8 @@ export default function DrumPad({ drumpad, keyboardKey }) {
   }
 
   return (
-    <div className={`drum-pad ${pressedPad ? 'active' : ''}`} 
+    <div className={`drum-pad ${pressedPad && 'active'}`} 
+      style={style}
       id={drumpad.id}
       tabIndex={0}
       onClick={handleClick}
@@ -61,7 +62,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
         id={keyboardKey} 
         className="clip" 
         src={drumpad.src}
-        muted={ mute ? true : false}
+        muted={ powerOff ? true : false}
         preload="auto"
       ></audio>
     </div>

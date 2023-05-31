@@ -3,7 +3,7 @@ import { createContext, useReducer } from "react";
 const DrumMachineContext = createContext();
 
 const initialState = {
-  mute: false,
+  powerOff: false,
   bankIndex: 0,
   volume: 0.5,
   currentName: 'Heater Kit',
@@ -22,7 +22,7 @@ const ACTIONS = {
 function reducer(state, action) {
   switch(action.type) {
     case ACTIONS.SWITCH_POWER:
-      return {...state, mute: !action.payload.mute}
+      return {...state, powerOff: !action.payload.powerOff}
     case ACTIONS.CHANGE_BANK:
       return (action.payload.bankIndex === 0) ? {...state, bankIndex: 1} : {...state, bankIndex: 0}
     case ACTIONS.CHANGE_VOLUME:

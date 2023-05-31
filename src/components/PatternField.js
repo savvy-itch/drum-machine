@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PatternPad from './PatternPad';
 import { BsFillPlayFill, BsFillStopFill } from "react-icons/bs";
 import * as Tone from 'tone';
+import { DrumMachineContext } from '../context';
 
 const padsAmount = 8;
 
@@ -12,6 +13,7 @@ export default function PatternField() {
   const [audioElementsRow1, setAudioElementsRow1] = useState([]);
   const [audioElementsRow2, setAudioElementsRow2] = useState([]);
   const [loop, setLoop] = useState(null);
+  const [state] = useContext(DrumMachineContext);
 
   useEffect(() => {
     const elementsRow1 = Array.from(document.getElementById('row-1').querySelectorAll('audio'));
@@ -56,27 +58,34 @@ export default function PatternField() {
     let index = 0;
     const row1 = audioElements[0];
     const row2 = audioElements[1];
-    if (isLoopPlaying) {
 
-      const playStep = () => {
-        setHighlightedPadIndex(index);
-        if (row1.length > 0 && row1[index] && row1[index].src !== '') {
-          const sample1 = new Tone.Player(row1[index].src).toDestination();
-          
-          Tone.loaded().then(() => sample1.start());
+    if (isLoopPlaying) {
+      // if drum machine is off
+      if (state.powerOff) {
+        // stop the loop and clear the pattern
+        clearPattern();
+      } else {
+        const playStep = () => {
+          setHighlightedPadIndex(index);
+          if (row1.length > 0 && row1[index] && row1[index].src !== '') {
+            const sample1 = new Tone.Player(row1[index].src).toDestination();
+            sample1.volume.value = state.volume * 10;
+            Tone.loaded().then(() => sample1.start());
+          }
+          if (row2.length > 0 && row2[index] && row2[index].src !== '') {
+            const sample2 = new Tone.Player(row2[index].src).toDestination();
+            sample2.volume.value = state.volume * 10;
+            Tone.loaded().then(() => sample2.start());
+          }
+          // set index to 0 when it reaches the end of the array
+          index = (index + 1) % padsAmount;
         }
-        if (row2.length > 0 && row2[index] && row2[index].src !== '') {
-          const sample2 = new Tone.Player(row2[index].src).toDestination();
-          Tone.loaded().then(() => sample2.start())
-        }
-        // set index to 0 when it reaches the end of the array
-        index = (index + 1) % padsAmount;
+        const loop = new Tone.Loop(playStep, '6n');
+        Tone.Transport.start();
+        loop.start(0);
+        Tone.start()
+        setLoop(loop);
       }
-      const loop = new Tone.Loop(playStep, '4n');
-      Tone.Transport.start();
-      loop.start(0);
-      Tone.start()
-      setLoop(loop);
     } else {
       if (loop) {
         // Stop the loop and don't highlight any pads
@@ -86,7 +95,7 @@ export default function PatternField() {
         setHighlightedPadIndex(-1);
       }
     }
-  }, [isLoopPlaying]);
+  }, [isLoopPlaying, state.powerOff, state.volume]);
 
   function clearPattern() {
     // stop playing loop

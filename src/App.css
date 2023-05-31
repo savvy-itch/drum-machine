@@ -16,12 +16,12 @@ body {
   --pads-color: #9a9fa2;
   --display-color: #009d8b;
   --buttons-color: #696e6f;
-  /* #38686f */
 
   background-color: var(--drum-machine-body-color);
   min-width: 550px;
   width: 50vmin;
   padding: 1.5rem;
+  border-radius: 6px;
 }
 .drum-machine-brand {
   font-size: 1.3rem;
@@ -36,7 +36,7 @@ body {
 .keys {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: .5rem;
+  gap: .6rem;
   max-width: 60%;
 }
 .drum-pad {
@@ -50,6 +50,7 @@ body {
   box-shadow: 4px 4px 3px 0px rgba(0,0,0,0.75);
   transition: .2s;
   user-select: none;
+  font-weight: bold;
 }
 .drum-pad:hover {
   cursor: pointer;
@@ -135,7 +136,7 @@ input:checked + .slider:before {
 
 /* ========== Pattern Field ======== */
 .pattern-field {
-  margin: 2rem 0;
+  margin-top: 2rem;
 }
 .pattern-row {
   display: flex;
@@ -174,14 +175,14 @@ input:checked + .slider:before {
 .pattern-pad:hover {
   cursor: pointer;
   border: 2px solid #2196F3;
-  background-color: var(--buttons-color);
+  filter: brightness(.8);
 }
 .playing-pad {
   border: 2px solid orange;
 }
-.assigned-pad {
+/* .assigned-pad {
   background-color: lightsalmon;
-}
-.assigned-pad:hover {
+} */
+/* .assigned-pad:hover {
   background-color: hsl(17, 100%, 64%);
-}
+} */

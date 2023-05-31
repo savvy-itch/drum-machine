@@ -4,6 +4,7 @@ import { AUDIO_CLIPS } from '../App';
 
 export default function PatternPad({ highlighted, isPatternCleared, setIsPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
+  const [padColor, setPadColor] = useState('');
   const [state] = useContext(DrumMachineContext);
   const patternPadRef = useRef();
 
@@ -20,6 +21,7 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
       if (!AUDIO_CLIPS.find(bank => bank.bank === state.currentName)) {
         // assign corresponding sound to pad
         setIsAssigned(true);
+        setPadColor(AUDIO_CLIPS[state.bankIndex].clips.find(clip => clip.name === state.currentName).color);
         patternPadRef.current.src = AUDIO_CLIPS[state.bankIndex].clips.find(clip => clip.name === state.currentName).src;
         patternPadRef.current.dataset.name = state.currentName;
       }
@@ -38,7 +40,9 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
   }, [isPatternCleared]);
 
   return (
-    <button className={`pattern-pad ${highlighted ? 'playing-pad' : '' } ${isAssigned ? 'assigned-pad' : ''}`} onClick={memoizedHandleClick}>
+    <button className={`pattern-pad ${highlighted && 'playing-pad'}`} 
+      style={{backgroundColor: `${isAssigned && !state.powerOff ? padColor : '' }`}}
+      onClick={memoizedHandleClick}>
       <audio ref={patternPadRef}></audio>
     </button>
   )
