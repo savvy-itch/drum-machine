@@ -5,7 +5,7 @@ const DrumMachineContext = createContext();
 const initialState = {
   powerOff: false,
   bankIndex: 0,
-  volume: 0.5,
+  // volume: 0.5,
   currentName: 'Heater Kit',
   playingPadIndex: -1,
   patternPadsAudio: [], 
@@ -14,7 +14,7 @@ const initialState = {
 const ACTIONS = {
   SWITCH_POWER: 'switch-power',
   CHANGE_BANK: 'change-bank',
-  CHANGE_VOLUME: 'change-volume',
+  // CHANGE_VOLUME: 'change-volume',
   DISPLAY_NAME: 'display-name',
   UPDATE_AUDIO_ELEMENT: 'update-audio-element'
 }
@@ -25,8 +25,8 @@ function reducer(state, action) {
       return {...state, powerOff: !action.payload.powerOff}
     case ACTIONS.CHANGE_BANK:
       return (action.payload.bankIndex === 0) ? {...state, bankIndex: 1} : {...state, bankIndex: 0}
-    case ACTIONS.CHANGE_VOLUME:
-      return {...state, volume: action.payload.volume / 10}
+    // case ACTIONS.CHANGE_VOLUME:
+    //   return {...state, volume: action.payload.volume / 10}
     case ACTIONS.DISPLAY_NAME:
       return {...state, currentName: action.payload.currentName}
     case ACTIONS.UPDATE_AUDIO_ELEMENT:

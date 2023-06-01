@@ -6,7 +6,6 @@ import { DrumMachineContext, ACTIONS } from './context';
 import PatternField from './components/PatternField';
 
 // add ability to play with wrong language layout
-// optimize bank switch to not cause pattern field re-render
 
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
@@ -36,7 +35,7 @@ const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
 // const KEYBOARD_KEYSs = [['Q', 'Й'], ['W', 'Ц'], ['E', 'У'], ['A', 'Ф'], ['S', 'Ы'], ['D', 'В'], ['Z', 'Я'], ['X', 'Ч'], ['C', 'С']];
 
 function App() {
-  const [volume, setVolume] = useState(5);
+  // const [volume, setVolume] = useState(5);
   const [ state, dispatch ] = useContext(DrumMachineContext); 
 
   function handlePowerSwitch() {
@@ -49,11 +48,11 @@ function App() {
     dispatch({ type: ACTIONS.CHANGE_BANK, payload: {currentName: AUDIO_CLIPS[newBankIndex].bank, bankIndex: state.bankIndex} });
   }
 
-  function handleVolumeChange(e) {
-    const newVolume = parseInt(e.target.value);
-    setVolume(newVolume);
-    dispatch({ type: ACTIONS.CHANGE_VOLUME, payload: { volume: newVolume } });
-  }
+  // function handleVolumeChange(e) {
+  //   const newVolume = parseInt(e.target.value);
+  //   setVolume(newVolume);
+  //   dispatch({ type: ACTIONS.CHANGE_VOLUME, payload: { volume: newVolume } });
+  // }
 
   return (
     <div className="App">
@@ -71,7 +70,7 @@ function App() {
               <Switch name={'Power'} onChange={handlePowerSwitch} />
               <Switch name={'Bank'} onChange={handleBankChange} />
             </div>
-            <input type="range" onInput={handleVolumeChange} min="0" max="10" value={volume} step="1" />
+            {/* <input type="range" onInput={handleVolumeChange} min="0" max="10" value={volume} step="1" /> */}
           </div>
         </div>
         <PatternField />

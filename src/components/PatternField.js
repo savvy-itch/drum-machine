@@ -69,12 +69,12 @@ export default function PatternField() {
           setHighlightedPadIndex(index);
           if (row1.length > 0 && row1[index] && row1[index].src !== '') {
             const sample1 = new Tone.Player(row1[index].src).toDestination();
-            sample1.volume.value = state.volume * 10;
+            // sample1.volume.value = state.volume * 10;
             Tone.loaded().then(() => sample1.start());
           }
           if (row2.length > 0 && row2[index] && row2[index].src !== '') {
             const sample2 = new Tone.Player(row2[index].src).toDestination();
-            sample2.volume.value = state.volume * 10;
+            // sample2.volume.value = state.volume * 10;
             Tone.loaded().then(() => sample2.start());
           }
           // set index to 0 when it reaches the end of the array
@@ -95,7 +95,7 @@ export default function PatternField() {
         setHighlightedPadIndex(-1);
       }
     }
-  }, [isLoopPlaying, state.powerOff, state.volume]);
+  }, [isLoopPlaying, state.powerOff]);
 
   function clearPattern() {
     // stop playing loop
@@ -115,10 +115,25 @@ export default function PatternField() {
     });
   }
 
+  function handlePlayButtonClick() {
+    if (isLoopPlaying) {
+      // stop the loop
+      setIsLoopPlaying(false);
+    } else {
+      // if there're any pads assigned
+      if (audioElementsRow1.find(pad => pad.src && pad.src !== '/audio/silence.mp3')) {
+        setIsLoopPlaying(true)
+      } else {
+      // if the pattern is empty
+        setIsLoopPlaying(false);
+      }
+    }
+  }
+
   return (
     <div className="pattern-field">
       <div id="row-1" className="pattern-row">
-        <button className="pattern-play-btn pattern-btn" onClick={() => setIsLoopPlaying(!isLoopPlaying)}>
+        <button className="pattern-play-btn pattern-btn" onClick={handlePlayButtonClick}>
           {isLoopPlaying ? <BsFillStopFill/> : <BsFillPlayFill />}
         </button>
         {padsArr}
