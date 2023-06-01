@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import './App.css';
 import DrumPad from './components/DrumPad';
 import Switch from './components/Switch';
 import { DrumMachineContext, ACTIONS } from './context';
 import PatternField from './components/PatternField';
+import { useDispatch, useSelector } from 'react-redux';
+import { switchPower, switchBank } from './features/switches/switchesSlice';
 
 // add ability to play with wrong language layout
 
@@ -35,24 +37,13 @@ const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
 // const KEYBOARD_KEYSs = [['Q', 'Й'], ['W', 'Ц'], ['E', 'У'], ['A', 'Ф'], ['S', 'Ы'], ['D', 'В'], ['Z', 'Я'], ['X', 'Ч'], ['C', 'С']];
 
 function App() {
-  // const [volume, setVolume] = useState(5);
-  const [ state, dispatch ] = useContext(DrumMachineContext); 
-
-  function handlePowerSwitch() {
-    dispatch({ type: ACTIONS.SWITCH_POWER, payload: {powerOff: state.powerOff} });
-  }
+  const dispatch = useDispatch();
+  const switches = useSelector(state => state.switches);
 
   function handleBankChange() {
-    const newBankIndex = state.bankIndex === 0 ? 1 : 0;
-    dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[newBankIndex].bank} });
-    dispatch({ type: ACTIONS.CHANGE_BANK, payload: {currentName: AUDIO_CLIPS[newBankIndex].bank, bankIndex: state.bankIndex} });
+    const newBankIndex = switches.bankIndex === 0 ? 1 : 0;
+    dispatch(switchBank({ currentName: AUDIO_CLIPS[newBankIndex].bank, bankIndex: newBankIndex }));
   }
-
-  // function handleVolumeChange(e) {
-  //   const newVolume = parseInt(e.target.value);
-  //   setVolume(newVolume);
-  //   dispatch({ type: ACTIONS.CHANGE_VOLUME, payload: { volume: newVolume } });
-  // }
 
   return (
     <div className="App">
@@ -60,17 +51,16 @@ function App() {
         <h1 className="drum-machine-brand">Mockai</h1>
         <div className="drum-machine-ui">
           <div className="keys">
-          {AUDIO_CLIPS[state.bankIndex].clips.map((drumpad, index) => {
+          {AUDIO_CLIPS[switches.bankIndex].clips.map((drumpad, index) => {
             return <DrumPad key={drumpad.id} drumpad={drumpad} keyboardKey={KEYBOARD_KEYS[index]} />
           })}
           </div>
           <div className="settings">
-            <div id="display" className="display">{state.currentName}</div>
+            <div id="display" className="display">{switches.currentName}</div>
             <div className="switches-container">
-              <Switch name={'Power'} onChange={handlePowerSwitch} />
+              <Switch name={'Power'} onChange={() => dispatch(switchPower({ powerOff: switches.powerOff }))} />
               <Switch name={'Bank'} onChange={handleBankChange} />
             </div>
-            {/* <input type="range" onInput={handleVolumeChange} min="0" max="10" value={volume} step="1" /> */}
           </div>
         </div>
         <PatternField />
