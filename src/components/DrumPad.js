@@ -1,25 +1,29 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
-import { ACTIONS, DrumMachineContext } from '../context';
+import React, { useRef, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { AUDIO_CLIPS } from '../App';
+import { displayName } from '../features/display/displaySlice';
 
 export default function DrumPad({ drumpad, keyboardKey }) {
   const [pressedPad, setPressedPad] = useState(false);
   const audioRef = useRef();
-  const [state, dispatch] = useContext(DrumMachineContext);
-  const {powerOff, bankIndex} = state;
-  const style = {boxShadow: `0px 0px 4px 2px ${AUDIO_CLIPS[bankIndex].clips.find(pad => pad.id === drumpad.id).color}`}
+  const dispatch = useDispatch();
+  const switches = useSelector(state => state.switches);
+
+  const style = {boxShadow: `0px 0px 4px 2px ${AUDIO_CLIPS[switches.bankIndex].clips.find(pad => pad.id === drumpad.id).color}`}
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.type === 'click' || event.key.toUpperCase() === keyboardKey) {
-        dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} })
-        setPressedPad(true)
-        if (audioRef.current) {
-          // audioRef.current.volume = volume;
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(error => {
-            console.error('Error playing audio:', error);
-          });
+        // if drum machine is on
+        if (!switches.powerOff) {
+          dispatch(displayName({ currentName: AUDIO_CLIPS[switches.bankIndex].clips.find(clip => clip.id === drumpad.id).name}));
+          setPressedPad(true)
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(error => {
+              console.error('Error playing audio:', error);
+            });
+          }
         }
       }
     };
@@ -36,12 +40,11 @@ export default function DrumPad({ drumpad, keyboardKey }) {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
     };
-  }, [keyboardKey]);
+  }, [keyboardKey, switches.powerOff]);
 
   function handleClick() {
-    if (audioRef.current) {
-      dispatch({ type: ACTIONS.DISPLAY_NAME, payload: {currentName: AUDIO_CLIPS[bankIndex].clips.find(clip => clip.id === drumpad.id).name} });
-      // audioRef.current.volume = volume;
+    if (!switches.powerOff && audioRef.current) {
+      dispatch(displayName({ currentName: AUDIO_CLIPS[switches.bankIndex].clips.find(clip => clip.id === drumpad.id).name}));
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(error => {
         console.error('Error playing audio:', error);
@@ -62,7 +65,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
         id={keyboardKey} 
         className="clip" 
         src={drumpad.src}
-        muted={ powerOff ? true : false}
+        muted={ switches.powerOff ? true : false}
         preload="auto"
       ></audio>
     </div>

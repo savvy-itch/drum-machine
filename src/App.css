@@ -76,15 +76,23 @@ body {
   max-width: 35%;
 }
 .display {
+  --display-font-size: 1.3rem; 
+  --display-py: .5rem;
+
   background-color: var(--display-color);
   font-family: Digital, Verdana, Geneva, Tahoma, sans-serif;
   font-weight: bold;
-  font-size: 1.3rem;
-  padding: .5rem .8rem;
+  font-size: var(--display-font-size);
+  padding: var(--display-py) .8rem;
   width: 100%;
+  min-height: calc(var(--display-font-size) + var(--display-py) * 2);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
+  transition: filter .2s;
+}
+.is-off {
+  filter: brightness(.8);
 }
 
 /* The switch - the box around the slider */

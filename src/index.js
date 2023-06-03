@@ -12,9 +12,9 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <DrumMachineProvider>
+      {/* <DrumMachineProvider> */}
         <App />
-      </DrumMachineProvider>
+      {/* </DrumMachineProvider> */}
     </Provider>
   </React.StrictMode>
 );

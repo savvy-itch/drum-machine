@@ -1,32 +1,33 @@
-import React, { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { DrumMachineContext } from '../context';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { AUDIO_CLIPS } from '../App';
 
 export default function PatternPad({ highlighted, isPatternCleared, setIsPatternCleared }) {
   const [isAssigned, setIsAssigned] = useState(false);
   const [padColor, setPadColor] = useState('');
-  const [state] = useContext(DrumMachineContext);
+  const switches = useSelector(state => state.switches);
+  const display = useSelector(state => state.display);
   const patternPadRef = useRef();
 
   // assign a sound clip to a pad that was last clicked (seen on display)
   const handleClick = useCallback(() => {
     // if the pad was already assigned to the same sample
-    if (isAssigned && state.currentName === patternPadRef.current.dataset.name) {
+    if (isAssigned && display.currentName === patternPadRef.current.dataset.name) {
       // unassign the sound from the pad
       setIsAssigned(false);
       patternPadRef.current.src = '/audio/silence.mp3';
       patternPadRef.current.dataset.name = '';
     } else {
       // if currentName is not a bank name
-      if (!AUDIO_CLIPS.find(bank => bank.bank === state.currentName)) {
+      if (!AUDIO_CLIPS.find(bank => bank.bank === display.currentName)) {
         // assign corresponding sound to pad
         setIsAssigned(true);
-        setPadColor(AUDIO_CLIPS[state.bankIndex].clips.find(clip => clip.name === state.currentName).color);
-        patternPadRef.current.src = AUDIO_CLIPS[state.bankIndex].clips.find(clip => clip.name === state.currentName).src;
-        patternPadRef.current.dataset.name = state.currentName;
+        setPadColor(AUDIO_CLIPS[switches.bankIndex].clips.find(clip => clip.name === display.currentName).color);
+        patternPadRef.current.src = AUDIO_CLIPS[switches.bankIndex].clips.find(clip => clip.name === display.currentName).src;
+        patternPadRef.current.dataset.name = display.currentName;
       }
     }
-  }, [isAssigned, state.currentName, patternPadRef]);
+  }, [isAssigned, display.currentName, patternPadRef]);
   // optimize handleClick to decrease render duration
   const memoizedHandleClick = useMemo(() => handleClick, [handleClick]);
 
@@ -41,7 +42,7 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
 
   return (
     <button className={`pattern-pad ${highlighted && 'playing-pad'}`} 
-      style={{backgroundColor: `${isAssigned && !state.powerOff ? padColor : '' }`}}
+      style={{backgroundColor: `${isAssigned && !switches.powerOff ? padColor : '' }`}}
       onClick={memoizedHandleClick}>
       <audio ref={patternPadRef}></audio>
     </button>

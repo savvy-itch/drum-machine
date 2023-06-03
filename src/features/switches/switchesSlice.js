@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   powerOff: false,
   bankIndex: 0,
-  currentName: 'Heater Kit',
 }
 
 const switchesSlice = createSlice({
@@ -14,7 +13,7 @@ const switchesSlice = createSlice({
       return {...state, powerOff: !action.payload.powerOff}
     },
     switchBank(state, action) {
-      return {...state, currentName: action.payload.currentName, bankIndex: action.payload.bankIndex}
+      return {...state, bankIndex: action.payload.bankIndex}
     }
   }
 })

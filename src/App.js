@@ -2,12 +2,10 @@ import React from 'react';
 import './App.css';
 import DrumPad from './components/DrumPad';
 import Switch from './components/Switch';
-import { DrumMachineContext, ACTIONS } from './context';
 import PatternField from './components/PatternField';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchPower, switchBank } from './features/switches/switchesSlice';
-
-// add ability to play with wrong language layout
+import { displayName } from './features/display/displaySlice';
 
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
@@ -34,15 +32,22 @@ export const AUDIO_CLIPS = [
   ]},
 ];
 const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
-// const KEYBOARD_KEYSs = [['Q', 'Й'], ['W', 'Ц'], ['E', 'У'], ['A', 'Ф'], ['S', 'Ы'], ['D', 'В'], ['Z', 'Я'], ['X', 'Ч'], ['C', 'С']];
 
 function App() {
   const dispatch = useDispatch();
   const switches = useSelector(state => state.switches);
+  const display = useSelector(state => state.display);
 
   function handleBankChange() {
     const newBankIndex = switches.bankIndex === 0 ? 1 : 0;
-    dispatch(switchBank({ currentName: AUDIO_CLIPS[newBankIndex].bank, bankIndex: newBankIndex }));
+    dispatch(switchBank({ bankIndex: newBankIndex }));
+    dispatch(displayName({ currentName: AUDIO_CLIPS[newBankIndex].bank}));
+  }
+
+  function handlePowerSwitch() {
+    const newPowerState = switches.powerOff ? false : true;
+    dispatch(switchPower({ powerOff: switches.powerOff }));
+    dispatch(displayName({ currentName: newPowerState ? ' ' : AUDIO_CLIPS[switches.bankIndex].bank}))
   }
 
   return (
@@ -56,9 +61,10 @@ function App() {
           })}
           </div>
           <div className="settings">
-            <div id="display" className="display">{switches.currentName}</div>
+            <div id="display" className={`display ${switches.powerOff && 'is-off'}`}>{display.currentName}</div>
             <div className="switches-container">
-              <Switch name={'Power'} onChange={() => dispatch(switchPower({ powerOff: switches.powerOff }))} />
+              {/* <Switch name={'Power'} onChange={() => dispatch(switchPower({ powerOff: switches.powerOff }))} /> */}
+              <Switch name={'Power'} onChange={handlePowerSwitch} />
               <Switch name={'Bank'} onChange={handleBankChange} />
             </div>
           </div>
