@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { switchPower, switchBank } from './features/switches/switchesSlice';
 import { displayName } from './features/display/displaySlice';
 
-// add responsive styles
-
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
     {id: "Heater-1", name: "Heater 1", src: "/audio/Heater-1.mp3", color: "#FFB84C"},
