@@ -1,11 +1,17 @@
+@font-face {
+  font-family: Digital;
+  src: url(../public/fonts/Digital7-rg1mL.ttf);
+}
+
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 body {
   min-height: 100dvh;
-  background-color: hsl(0, 0%, 60%);
+  background: linear-gradient(to bottom, hsl(263, 30%, 31%), hsl(263, 30%, 15%));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,12 +21,13 @@ body {
   --pads-color: #9a9fa2;
   --display-color: #009d8b;
   --buttons-color: #696e6f;
-  /* #38686f */
 
   background-color: var(--drum-machine-body-color);
-  min-width: 500px;
+  min-width: 550px;
   width: 50vmin;
   padding: 1.5rem;
+  border-radius: 6px;
+  box-shadow: 10px 10px 7px 0px rgba(0,0,0,0.75);
 }
 .drum-machine-brand {
   font-size: 1.3rem;
@@ -35,7 +42,7 @@ body {
 .keys {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: .5rem;
+  gap: .6rem;
   max-width: 60%;
 }
 .drum-pad {
@@ -49,6 +56,7 @@ body {
   box-shadow: 4px 4px 3px 0px rgba(0,0,0,0.75);
   transition: .2s;
   user-select: none;
+  font-weight: bold;
 }
 .drum-pad:hover {
   cursor: pointer;
@@ -65,18 +73,35 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  width: 35%;
+  max-width: 35%;
 }
 .display {
+  --display-font-size: 1.3rem; 
+  --display-py: .5rem;
+
   background-color: var(--display-color);
-  padding: .5rem .8rem;
+  font-family: Digital, Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+  font-size: var(--display-font-size);
+  padding: var(--display-py) .8rem;
+  width: 100%;
+  min-height: calc(var(--display-font-size) + var(--display-py) * 2);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: filter .2s;
+}
+.is-off {
+  filter: brightness(.8);
 }
 
 /* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 24px;
+  width: 56px;
+  height: 26px;
 }
 /* Hide default HTML checkbox */
 .switch input {
@@ -99,8 +124,8 @@ body {
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -115,13 +140,94 @@ input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
 }
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
 }
 
 .switches-container {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+/* ========== Pattern Field ======== */
+.pattern-field {
+  margin-top: 2rem;
+}
+.pattern-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: .5rem;
+}
+.pattern-btn {
+  width: 40px;
+  height: 30px;
+  background-color: var(--pads-color);
+  color: #172b4d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 2px solid #172b4d;
+  transition: .1s;
+}
+.pattern-btn svg {
+  height: 1.5em;
+  width: 1.5em;
+}
+.pattern-btn:hover,
+.pattern-btn:focus {
+  cursor: pointer;
+}
+.pattern-pad {
+  width: 30px;
+  height: 30px;
+  background-color: var(--pads-color);
+  border-radius: 5px;
+  border: 2px solid var(--display-color);
+  transition: .1s;
+}
+.pattern-pad:hover {
+  cursor: pointer;
+  border: 2px solid #2196F3;
+  filter: brightness(.8);
+}
+.playing-pad {
+  border: 2px solid orange;
+}
+
+@media screen and (max-width: 568px) {
+  .drum-machine {
+    min-width: 95vw;
+    padding: .8rem;
+    box-shadow: 0px 10px 7px 0px rgba(0,0,0,0.75);
+  }
+  .drum-machine-ui {
+    flex-direction: column;
+    align-items: center;
+  }
+  .keys {
+    max-width: 100%;
+  }
+  .settings {
+    width: 60%;
+    max-width: 100%;
+  }
+  .display {
+    margin: 1rem 0;
+  }
+}
+@media screen and (max-width: 350px) {
+  .settings {
+    width: 90%;
+  }
+  .pattern-pad {
+    width: 25px;
+  }
+  .drum-pad {
+    height: 70px;
+    width: 70px;
+  }
 }
