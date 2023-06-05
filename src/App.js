@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { switchPower, switchBank } from './features/switches/switchesSlice';
 import { displayName } from './features/display/displaySlice';
 
+// add responsive styles
+
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
     {id: "Heater-1", name: "Heater 1", src: "/audio/Heater-1.mp3", color: "#FFB84C"},
@@ -63,7 +65,6 @@ function App() {
           <div className="settings">
             <div id="display" className={`display ${switches.powerOff && 'is-off'}`}>{display.currentName}</div>
             <div className="switches-container">
-              {/* <Switch name={'Power'} onChange={() => dispatch(switchPower({ powerOff: switches.powerOff }))} /> */}
               <Switch name={'Power'} onChange={handlePowerSwitch} />
               <Switch name={'Bank'} onChange={handleBankChange} />
             </div>

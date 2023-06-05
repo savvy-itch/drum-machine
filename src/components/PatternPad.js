@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { AUDIO_CLIPS } from '../App';
 
@@ -28,8 +28,6 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
       }
     }
   }, [isAssigned, display.currentName, patternPadRef]);
-  // optimize handleClick to decrease render duration
-  const memoizedHandleClick = useMemo(() => handleClick, [handleClick]);
 
   useEffect(() => {
     // if 'clear' button was clicked
@@ -43,7 +41,7 @@ export default function PatternPad({ highlighted, isPatternCleared, setIsPattern
   return (
     <button className={`pattern-pad ${highlighted && 'playing-pad'}`} 
       style={{backgroundColor: `${isAssigned && !switches.powerOff ? padColor : '' }`}}
-      onClick={memoizedHandleClick}>
+      onClick={handleClick}>
       <audio ref={patternPadRef}></audio>
     </button>
   )

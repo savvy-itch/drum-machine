@@ -33,12 +33,13 @@ export default function DrumPad({ drumpad, keyboardKey }) {
         setPressedPad(false);
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
+    
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [keyboardKey, switches.powerOff]);
 
@@ -53,7 +54,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
   }
 
   return (
-    <div className={`drum-pad ${pressedPad && 'active'}`} 
+    <div className={`drum-pad ${pressedPad ? 'active' : ''}`} 
       style={style}
       id={drumpad.id}
       tabIndex={0}
@@ -65,7 +66,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
         id={keyboardKey} 
         className="clip" 
         src={drumpad.src}
-        muted={ switches.powerOff ? true : false}
+        muted={switches.powerOff}
         preload="auto"
       ></audio>
     </div>
