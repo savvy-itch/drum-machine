@@ -1,7 +1,8 @@
 # Drum Machine React app
 ## Description
 This is a Drum Machine web app built on React.js with state managed using Redux. 
-You can check the [live version]() here
+You can check the [live version]() here.
+
 ![App Screenshot](https://i.ibb.co/SymfbrV/Screenshot-4.jpg)
 ## Functionality
 - Pressing a respective key or clicking a pad triggers sample playing
