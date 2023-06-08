@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from 'react';
 import PatternPad from './PatternPad';
 import { BsFillPlayFill, BsFillStopFill } from 'react-icons/bs';
