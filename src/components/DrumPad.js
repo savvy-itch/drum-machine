@@ -9,6 +9,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
   const audioRef = useRef();
   const dispatch = useDispatch();
   const switches = useSelector(state => state.switches);
+  const volume = useSelector(state => state.volume.volume);
 
   const style = {boxShadow: `0px 0px 4px 2px ${AUDIO_CLIPS[switches.bankIndex].clips.find(pad => pad.id === drumpad.id).color}`}
 
@@ -21,6 +22,7 @@ export default function DrumPad({ drumpad, keyboardKey }) {
           setPressedPad(true)
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
+            audioRef.current.volume = volume;
             audioRef.current.play().catch(error => {
               console.error('Error playing audio:', error);
             });
@@ -42,12 +44,13 @@ export default function DrumPad({ drumpad, keyboardKey }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [keyboardKey, switches.powerOff]);
+  }, [keyboardKey, switches.powerOff, volume]);
 
   function handleClick() {
     if (!switches.powerOff && audioRef.current) {
       dispatch(displayName({ currentName: AUDIO_CLIPS[switches.bankIndex].clips.find(clip => clip.id === drumpad.id).name}));
       audioRef.current.currentTime = 0;
+      audioRef.current.volume = volume;
       audioRef.current.play().catch(error => {
         console.error('Error playing audio:', error);
       });
