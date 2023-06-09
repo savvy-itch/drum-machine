@@ -9,7 +9,7 @@ const volumeSlice = createSlice({
   initialState,
   reducers: {
     changeVolume(state, action) {
-      return {...state, volume: action.payload.volume / 10}
+      return {...state, volume: action.payload.volume / 100}
     },
   }
 })

@@ -12,4 +12,5 @@ You can check the [live version](https://drum-machine-redux-sib.netlify.app/) he
 - The pattern can be cleared using "Clear" button
 ## Contribution
 Any useful contribution is welcome. Here's what could be improved as of right now:
-- Optimization of PatternField to perform more stably
+- Right now the volume change during a loop play resets it to start from the beginning. A solution to avoid loop reset would be useful.
+- Re-renders optimization: some operations cause re-renders of unrelated components (e.g. changing volume).

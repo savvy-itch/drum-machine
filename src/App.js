@@ -8,8 +8,6 @@ import { switchPower, switchBank } from './features/switches/switchesSlice';
 import { displayName } from './features/display/displaySlice';
 import { changeVolume } from './features/volume/volumeSlice';
 
-// customize volume range
-
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
     {id: "Heater-1", name: "Heater 1", src: "/audio/Heater-1.mp3", color: "#FFB84C"},
@@ -37,7 +35,7 @@ export const AUDIO_CLIPS = [
 const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
 
 function App() {
-  const [volume, setVolume] = useState(5);
+  const [volume, setVolume] = useState(50);
   const dispatch = useDispatch();
   const switches = useSelector(state => state.switches);
   const display = useSelector(state => state.display);
@@ -72,7 +70,13 @@ function App() {
           </div>
           <div className="settings">
             <div id="display" className={`display ${switches.powerOff && 'is-off'}`}>{display.currentName}</div>
-            <input type="range" min={1} max={10} value={volume} step={1} onChange={handleVolumeChange} />
+            <div className="volume-container">
+              <div className="volume-limits">
+                <p>0</p>
+                <p>100</p>
+              </div>
+              <input className="volume-range" type="range" min={1} max={100} value={volume} step={1} onChange={handleVolumeChange} />
+            </div>
             <div className="switches-container">
               <Switch name={'Power'} onChange={handlePowerSwitch} />
               <Switch name={'Bank'} onChange={handleBankChange} />
