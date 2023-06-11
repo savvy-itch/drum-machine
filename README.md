@@ -1,7 +1,7 @@
 # Drum Machine React app
 ## Description
 This is a Drum Machine web app built on React.js with state managed using Redux. 
-You can check the [live version](https://drum-machine-redux-sib.netlify.app/) here.
+You can check the [live version here](https://drum-machine-redux-sib.netlify.app/).
 
 ![App Screenshot](https://i.ibb.co/SymfbrV/Screenshot-4.jpg)
 ## Functionality
