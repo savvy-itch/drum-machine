@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import DrumPad from './components/DrumPad';
 import Switch from './components/Switch';
@@ -6,8 +6,7 @@ import PatternField from './components/PatternField';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchPower, switchBank } from './features/switches/switchesSlice';
 import { displayName } from './features/display/displaySlice';
-
-// add responsive styles
+import { changeVolume } from './features/volume/volumeSlice';
 
 export const AUDIO_CLIPS = [
   {bank: 'Heater Kit', clips: [
@@ -36,6 +35,7 @@ export const AUDIO_CLIPS = [
 const KEYBOARD_KEYS = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
 
 function App() {
+  const [volume, setVolume] = useState(50);
   const dispatch = useDispatch();
   const switches = useSelector(state => state.switches);
   const display = useSelector(state => state.display);
@@ -52,6 +52,12 @@ function App() {
     dispatch(displayName({ currentName: newPowerState ? ' ' : AUDIO_CLIPS[switches.bankIndex].bank}))
   }
 
+  function handleVolumeChange(e) {
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+    dispatch(changeVolume({ volume: newVolume}));
+  }
+
   return (
     <div className="App">
       <div id="drum-machine" className="drum-machine">
@@ -64,6 +70,13 @@ function App() {
           </div>
           <div className="settings">
             <div id="display" className={`display ${switches.powerOff && 'is-off'}`}>{display.currentName}</div>
+            <div className="volume-container">
+              <div className="volume-limits">
+                <p>0</p>
+                <p>100</p>
+              </div>
+              <input className="volume-range" type="range" min={1} max={100} value={volume} step={1} onChange={handleVolumeChange} />
+            </div>
             <div className="switches-container">
               <Switch name={'Power'} onChange={handlePowerSwitch} />
               <Switch name={'Bank'} onChange={handleBankChange} />
